@@ -14,6 +14,8 @@ class Index extends Component
     use WithPagination;
     public $catatanId;
 
+    protected $listeners = ['catatanUpdated' => '$refresh'];
+
     public function edit($id) 
     {
         $this->dispatch('edit-catatan', $id);
@@ -27,15 +29,6 @@ class Index extends Component
 
     public function render()
     {
-        // $catatans = Catatan::orderBy('created_at', 'desc')
-        // ->paginate(5);
-
-        // return view('livewire.catatan.index', [
-        //     'catatans' => $catatans,
-        // ]);
-        // return view('livewire.catatan.index', [
-        //     'data' => 'Hello Wolrd'
-        // ]);
         return view('livewire.catatan.index', [
             'catatans' => Catatan::latest()->paginate(5),
             'users'    => User::latest()->get() 

@@ -36,21 +36,36 @@
             <tbody class="bg-white divide-y divide-gray-100">
                 @forelse ($catatans as $index => $catatan)
                     <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $catatans->firstItem() + $index }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {{ $catatans->firstItem() + $index }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 flex items-center space-x-3">
-                            <img class="w-8 h-8 rounded-full object-cover" src="https://ui-avatars.com/api/?name={{ urlencode($catatan->judul) }}" alt="Avatar">
+                            <img 
+                                class="w-8 h-8 rounded-full object-cover" 
+                                src="https://ui-avatars.com/api/?name={{ urlencode($catatan->judul) }}" 
+                                alt="Avatar"
+                            >
                             <span>{{ $catatan->judul }}</span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ Str::limit($catatan->isi, 50) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{{ $catatan->created_at->diffForHumans() }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ Str::limit($catatan->isi, 50) }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                            {{ $catatan->created_at->diffForHumans() }}
+                        </td>
                         <td class="px-6 py-4 text-center text-gray-500">
-                            <flux:button size="sm" variant="primary" wire:click="edit({{ $catatan->id }})">Edit</flux:button>
-                            <flux:button size="sm" variant="danger" wire:click="$emit('confirmDelete', {{ $catatan->id }})">Hapus</flux:button>
+                            <flux:button size="sm" variant="primary" wire:click="edit({{ $catatan->id }})">
+                                Edit
+                            </flux:button>
+                            {{-- 🔥 Ganti $emit → langsung panggil delete() --}}
+                            <flux:button size="sm" variant="danger" wire:click="delete({{ $catatan->id }})">
+                                Hapus
+                            </flux:button>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">Belum ada catatan.</td>
+                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">Belum ada catatan.</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -69,12 +84,18 @@
             <flux:text>Are you about to delete this catatan.</flux:text>
             <flux:text>This action cannot be reversed.</flux:text>
 
-            <div class="flex gap-2">
-                <flux:spacer />
+            <div class="flex gap-2 justify-end">
                 <flux:modal.close>
                     <flux:button variant="ghost">Cancel</flux:button>
                 </flux:modal.close>
-                <flux:button type="submit" variant="danger" wire:click="delete">Delete catatan</flux:button>
+                {{-- 🔥 Panggil method deleteCatatan(), bukan delete() --}}
+                <flux:button 
+                    type="button" 
+                    variant="danger" 
+                    wire:click="deleteCatatan"
+                >
+                    Delete catatan
+                </flux:button>
             </div>
         </div>
     </flux:modal>
